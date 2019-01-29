@@ -13,8 +13,8 @@ const schema = new Schema({
         type: String,
         required: true,
         trim: true,
-        index: true,
-        unique: true,
+        index: true, //isto serve para indexar e assim possibilitar a busca mais facil no bd
+        unique: [true, "O slug deve ser único"],
     },
     description: {
         type: String,
@@ -23,10 +23,10 @@ const schema = new Schema({
     },
     price: {
         type: Number,
-        required: true
+        required: [true, "Preço é obrigatório"]
     },
     isActive: {
-        type: true,
+        type: Boolean,
         required: true,
         default: true
     },
