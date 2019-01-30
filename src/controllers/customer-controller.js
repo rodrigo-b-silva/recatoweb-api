@@ -1,9 +1,9 @@
 'use strict';
 
 const mongoose = require('mongoose');
-const Product = require('../models/product');
+const Customer = require('../models/customer');
 const ValidatorContract = require('../validator/validator-inputs');
-const repository = require('../repositories/product-repositoty');
+const repository = require('../repositories/customer-repository');
 
 exports.get = async (req, res, next) => {
     try {
@@ -23,29 +23,11 @@ exports.getById = async (req, res, next) => {
     }
 }
 
-exports.getBySlug = async (req, res, next) => {
-    try {
-        let data = await repository.getBySlug(req.params.slug);
-        res.status(200).send(data);
-    } catch (e) {
-        res.status(400).send({ message: 'Falha na consulta' });
-    }
-}
-
-exports.getByTag = async (req, res, next) => {
-    try {
-        let data = await repository.getByTag(req.params.tag);
-        res.status(200).send(data);
-    } catch (e) {
-        res.status(400).send({ message: 'Falha na consulta' });
-    }
-}
-
 exports.create = async (req, res, next) => {
     let contract = new ValidatorContract();
-    contract.hasMinLen(req.body.title, 3, 'O titulo deve ter no minimo 3 caracteres');
-    contract.hasMinLen(req.body.slug, 3, 'O slug deve ter no minimo 3 caracteres');
-    contract.hasMinLen(req.body.description, 3, 'A descrição deve ter no minimo 3 caracteres');
+    contract.hasMinLen(req.body.name, 3, 'O nome deve ter no minimo 3 caracteres');
+    contract.isEmail(req.body.email, 'O email precisa ser valido');
+    contract.hasMinLen(req.body.password, 4, 'A senha deve ter no minimo 4 caracteres');
 
     if (!contract.isValid()) {
         res.status(400).send(contract.erros()).end();
@@ -54,7 +36,7 @@ exports.create = async (req, res, next) => {
 
     try {
         await repository.create(req.body);
-        res.status(201).send({ message: 'Produto cadastro com sucesso' });
+        res.status(201).send({ message: 'Cliente cadastro com sucesso' });
     } catch (e) {
         res.status(400).send({ message: 'Falha ao cadastrar' });
     }
@@ -63,7 +45,7 @@ exports.create = async (req, res, next) => {
 exports.update = async (req, res, next) => {
     try {
         await repository.update(req.params.id, req.body);
-        res.status(201).send({ message: 'Produto atualizado com sucesso' });
+        res.status(201).send({ message: 'Cliente atualizado com sucesso' });
     } catch (e) {
         res.status(400).send({ message: 'Falha na atualização' });
     }
@@ -72,7 +54,7 @@ exports.update = async (req, res, next) => {
 exports.remove = async (req, res, next) => {
     try {
         await repository.remove(req.params.id);
-        res.status(201).send({ message: 'Produto removido com sucesso' });
+        res.status(201).send({ message: 'Cliente removido com sucesso' });
     } catch (e) {
         res.status(400).send({ message: 'Falha na remoção' });
     }
