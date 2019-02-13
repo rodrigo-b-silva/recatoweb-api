@@ -1,9 +1,8 @@
 'user strict';
 
-const mongoose = require('mongoose');
-const Order = require('../models/order');
 const ValidatorContract = require('../validator/validator-inputs');
 const repository = require('../repositories/order-repository');
+const guid = require('guid');
 
 exports.get = async (req, res, next) => {
     try{
@@ -25,8 +24,12 @@ exports.getById = async (req, res, next) => {
 
 exports.create = async (req, res, next) => {
     try{
-        await repository.create(req.body);
-        res.staus(201).send({ message: 'Ordem criada com sucesso' });
+        await repository.create({
+            customer: req.body.customer,
+            number: req.body.number,
+            items: req.body.items
+        });
+        res.staus(201).send({ message: 'Pedido cadastrado com sucesso' });
     } catch(e){
         res.status(400).send({ message: 'Falha no cadastro' });
     }

@@ -1,14 +1,14 @@
 'use strict';
 
 const express = require('express');
-const bodyParser = require('body-parser');
 const app = express();
+const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-//conection database
+//connection database
 mongoose.connect('mongodb://recato:recato123@ds046549.mlab.com:46549/recato');
 
 //routes
