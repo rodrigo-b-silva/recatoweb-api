@@ -20,7 +20,7 @@ exports.getBySlug = async (slug) => {
 }
 
 exports.getByTag = async (tags) => {
-    const res = await Product.find({ tags: tags}, 'title description tags');
+    const res = await Product.find({ tags: tags}, 'title description tags'); //entre '' fez uma seleção de quais dados serão retornados
     return res;
 }
 
@@ -46,5 +46,4 @@ exports.update = async (id, data) => {
 
 exports.remove = async (id) => {
     await Product.findByIdAndRemove(id);
-    return res;
 }

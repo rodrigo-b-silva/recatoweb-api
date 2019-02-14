@@ -9,19 +9,19 @@ const schema = new Schema({
         ref: 'Customer'
     },
     number: {
-        type: Number,
+        type: String,
         required: true
-    },
-    createAt: {
-        type: Date,
-        required: true,
-        default: Date.now
     },
     status: {
         type: String,
         required: true,
         enum: ['created', 'done'],
         default: 'created'
+    },
+    createAt: {
+        type: Date,
+        required: true,
+        default: Date.now
     },
     items: [{
         quantity: {

@@ -9,27 +9,14 @@ exports.get = async () => {
 }
 
 exports.getById = async (id) => {
-    let res = await Order.findById(id);
+    //let res = await Order.findById(id);
+    let res = await Order.findById(id)
+        .populate('customer')
+        .populate('items.product', 'title price tags'); //nesta opção, pega o id e automaticamente traz os dados do customer
     return res;
 }
 
 exports.create = async (data) => {
     const order = new Order(data);
     await order.save();
-}
-
-exports.update = async (id, data) => {
-    await Order.findByIdAndUpdate(id, {
-        $set: {
-            customer: data.customer,
-            number: data.number,
-            createAt: data.createAt,
-            status: data.status,
-            items: data.items
-        }
-    });
-}
-
-exports.remove = async (id) => {
-    await Order.findByIdAndRemove(id);
 }

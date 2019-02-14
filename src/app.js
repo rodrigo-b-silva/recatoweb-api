@@ -23,7 +23,7 @@ const Customer = require('./models/customer');
 const Order = require('./models/order');
 
 app.use('/', indexRoute);
-app.use('/products', productRoute);
+app.use('/product', productRoute);
 app.use('/customer', customerRoute);
 app.use('/order', orderRoute);
 
