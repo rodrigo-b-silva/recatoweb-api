@@ -4,12 +4,13 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const config = require('./config');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 //connection database
-mongoose.connect('mongodb://recato:recato123@ds046549.mlab.com:46549/recato');
+mongoose.connect(config.connectionString);
 
 //routes
 const indexRoute = require('./routes');
