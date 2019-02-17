@@ -39,3 +39,8 @@ exports.authenticate = async (data) => {
     });
     return res;
 }
+
+exports.refreshToken = async (id) => {
+    const res = await Customer.findById(id);
+    return res;
+}

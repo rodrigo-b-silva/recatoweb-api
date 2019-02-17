@@ -3,11 +3,11 @@
 const config = require('../config');
 const sendgrid = require('sendgrid')(config.sendgridKey);
 
-exports.sendWelcome = async (to, subject, body) => {
+exports.send = async (to, subject, body) => {
     sendgrid.send({
         to: to,
-        from: 'recato_teste@gmil.com',
+        from: 'rodrigo.barbosa@fcamara.com.br',
         subject: subject,
-        body: body
-    })
+        html: body
+    });
 }

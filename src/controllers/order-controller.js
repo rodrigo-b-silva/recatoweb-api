@@ -26,7 +26,7 @@ exports.getById = async (req, res, next) => {
 exports.create = async (req, res, next) => {
     try{
         const token = req.body.token || req.query.token || req.headers['x-access-token'];
-        const data = authService.decodeToken(token);
+        const data = await authService.decodeToken(token);
 
         await repository.create({
             customer: data.id,

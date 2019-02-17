@@ -40,12 +40,14 @@ exports.create = async (req, res, next) => {
         await repository.create({
             name: req.body.name,
             email: req.body.email,
-            password: md5(req.body.password + global.SALT_KEY)
+            password: md5(req.body.password + global.SALT_KEY),
+            roles: ['user']
         });
 
-        emailService.sendWelcome(res.body.email, 
-                                'Seja bem-vindo a recado', 
-                                global.EMAIL_TEMPLATE.replace('{0}', res.body.name));
+        emailService.send(
+            req.body.email, 
+            'Seja bem-vindo a Recato',
+            global.EMAIL_TEMPLATE.replace('{0}', req.body.name));
 
         res.status(201).send({ message: 'Cliente cadastro com sucesso' });
     } catch (e) {
@@ -78,6 +80,9 @@ exports.authenticate = async (req, res, next) => {
             password: md5(req.body.password + global.SALT_KEY)
         });
 
+        console.log(req.body);
+        console.log(md5(req.body.password + global.SALT_KEY));
+
         if(!customer){
             res.status(404).send({
                 message: 'Usuário ou senha inválidos'
@@ -88,11 +93,43 @@ exports.authenticate = async (req, res, next) => {
         const token = await authService.generateToken({
             id: customer._id,
             email: customer.email, 
-            name: customer.name
+            name: customer.name,
+            roles: customer.roles
         });
 
         res.status(201).send({ 
             token: token,
+            data: { email: customer.email, name: customer.name }
+        });
+    } catch (e) {
+        console.log(e);
+        res.status(400).send({ message: 'Falha ao cadastrar' });
+    }
+}
+
+exports.refreshToken = async (req, res, next) => {
+    try {
+        const token = req.body.token || req.query.token || req.headers['x-access-token'];
+        const data = await authService.decodeToken(token);
+
+        const customer = await repository.refreshToken(data.id);
+
+        if(!customer){
+            res.status(404).send({
+                message: 'Usuário não encontrado'
+            })
+            return;
+        }
+
+        const tokenData = await authService.generateToken({
+            id: customer._id,
+            email: customer.email, 
+            name: customer.name,
+            roles: customer.roles
+        });
+
+        res.status(201).send({ 
+            token: tokenData,
             data: { email: customer.email, name: customer.name }
         });
     } catch (e) {
